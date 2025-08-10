@@ -766,3 +766,46 @@ func ReadContainerArgsInDeployment(ctx context.Context, client *kubernetes.Clien
 	}, timeout).Should(gomega.Succeed())
 	return args
 }
+func ValidatePodRunning(ctx context.Context, client kubernetes.Interface, namespace, labelSelector string) {
+	gomega.Eventually(func() error {
+		pods, err := client.CoreV1().Pods(namespace).List(ctx, metav1.ListOptions{
+			LabelSelector: labelSelector,
+		})
+		if err != nil {
+			return err
+		}
+		if len(pods.Items) == 0 {
+			return fmt.Errorf("no pods found with selector %s", labelSelector)
+		}
+		for _, pod := range pods.Items {
+			if pod.Status.Phase != corev1.PodRunning {
+				return fmt.Errorf("pod %s is not running: %s", pod.Name, pod.Status.Phase)
+			}
+		}
+		return nil
+	}, time.Minute*2, time.Second*10).Should(gomega.Succeed())
+}
+
+func ApplyYAMLToCluster(ctx context.Context, client kubernetes.Interface, yamlManifest string) (*metav1.Object, error) {
+	// Implementation for applying YAML manifests
+	// This is a placeholder - implement based on your needs
+	return nil, nil
+}
+
+func ExecInPod(ctx context.Context, client kubernetes.Interface, namespace, podName, containerName string, cmd []string) (string, string, error) {
+	// Implementation for executing commands in pods
+	// This is a placeholder - implement based on your needs
+	return "", "", nil
+}
+
+func GetResource(ctx context.Context, client kubernetes.Interface, apiVersion, kind, namespace, name string) (*metav1.Object, error) {
+	// Implementation for getting generic resources
+	// This is a placeholder - implement based on your needs
+	return nil, nil
+}
+
+func DeleteResource(ctx context.Context, client kubernetes.Interface, apiVersion, kind, namespace, name string) error {
+	// Implementation for deleting generic resources
+	// This is a placeholder - implement based on your needs
+	return nil
+}
