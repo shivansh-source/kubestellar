@@ -957,4 +957,52 @@ var _ = ginkgo.Describe("end to end testing", func() {
 			})
 		})
 	})
+	ginkgo.Context("CustomTransform late arrival", func() {
+		ginkgo.It("updates ManifestWorks when CustomTransform is created after Binding", func(ctx context.Context) {
+			ginkgo.By("creating a test namespace and deployment WITHOUT CustomTransform")
+			testNs := "nginx-ct-late"
+			util.CleanupWDS(ctx, wds, ksWds, testNs)
+			util.CreateDeployment(ctx, wds, testNs, "nginx-ct-test",
+				map[string]string{
+					"app.kubernetes.io/name":                "nginx-ct-test",
+					"test.kubestellar.io/ct-late-arrival": "should-be-removed",
+				})
+
+			ginkgo.By("creating a BindingPolicy to propagate the deployment")
+			util.CreateBindingPolicy(ctx, ksWds, "nginx-ct-late",
+				[]metav1.LabelSelector{
+					{MatchLabels: map[string]string{"location-group": "edge"}},
+				},
+				[]ksapi.DownsyncPolicyClause{
+					{DownsyncObjectTest: ksapi.DownsyncObjectTest{
+						ObjectSelectors: []metav1.LabelSelector{{MatchLabels: map[string]string{"app.kubernetes.io/name": "nginx-ct-test"}}},
+					}},
+				},
+			)
+
+			ginkgo.By("verifying deployments are created without CustomTransform applied")
+			testLabelPresent := func(deployment *appsv1.Deployment) string {
+				if _, has := deployment.Labels["test.kubestellar.io/ct-late-arrival"]; !has {
+					return "it does not have the 'test.kubestellar.io/ct-late-arrival' label"
+				}
+				return ""
+			}
+			util.ValidateNumDeployments(ctx, "wec1", wec1, testNs, 1, testLabelPresent)
+			util.ValidateNumDeployments(ctx, "wec2", wec2, testNs, 1, testLabelPresent)
+
+			ginkgo.By("creating a CustomTransform that removes the test label")
+			util.CreateCustomTransform(ctx, ksWds, "ct-late-arrival", "apps", "deployments", 
+				`$.metadata.labels["test.kubestellar.io/ct-late-arrival"]`)
+
+			ginkgo.By("verifying deployments are updated with CustomTransform applied")
+			testLabelAbsent := func(deployment *appsv1.Deployment) string {
+				if _, has := deployment.Labels["test.kubestellar.io/ct-late-arrival"]; has {
+					return "it still has the 'test.kubestellar.io/ct-late-arrival' label"
+				}
+				return ""
+			}
+			util.ValidateNumDeployments(ctx, "wec1", wec1, testNs, 1, testLabelAbsent)
+			util.ValidateNumDeployments(ctx, "wec2", wec2, testNs, 1, testLabelAbsent)
+		})
+	})
 })
