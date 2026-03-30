@@ -235,7 +235,7 @@ is_installed_ocm() {
         'bash <(curl -L https://raw.githubusercontent.com/open-cluster-management-io/clusteradm/refs/tags/v1.0.0/install.sh) 1.0.0' \
         "" \
         :v1.0 \
-        :v2
+        :v1.1
 }
 
 is_installed_yq() {
