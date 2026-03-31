@@ -29,7 +29,7 @@ spec:
                 echo "Kubeconfig file is ready"
             env:
             - name: KUBECONFIG
-              value: "{{"/etc/kube/{{.ITSkubeconfig}}"}}"
+              value: "/etc/kube/{{ .ITSSecretKey }}"
             volumeMounts:
             - name: kubeconfig
               mountPath: "/etc/kube"
@@ -44,7 +44,7 @@ spec:
                 until kubectl get crd placements.cluster.open-cluster-management.io >/dev/null 2>&1; do sleep 2; done
             env:
             - name: KUBECONFIG
-              value: "{{"/etc/kube/{{.ITSkubeconfig}}"}}"
+              value: "/etc/kube/{{ .ITSSecretKey }}"
             volumeMounts:
             - name: kubeconfig
               mountPath: "/etc/kube"
@@ -60,7 +60,7 @@ spec:
               - --timeout=300s
             env:
             - name: KUBECONFIG
-              value: "{{"/etc/kube/{{.ITSkubeconfig}}"}}"
+              value: "/etc/kube/{{ .ITSSecretKey }}"
             volumeMounts:
             - name: kubeconfig
               mountPath: "/etc/kube"
@@ -75,7 +75,7 @@ spec:
                 until kubectl get crd managedclustersetbindings.cluster.open-cluster-management.io >/dev/null 2>&1; do sleep 2; done
             env:
             - name: KUBECONFIG
-              value: "{{"/etc/kube/{{.ITSkubeconfig}}"}}"
+              value: "/etc/kube/{{ .ITSSecretKey }}"
             volumeMounts:
             - name: kubeconfig
               mountPath: "/etc/kube"
@@ -91,7 +91,7 @@ spec:
               - --timeout=300s
             env:
             - name: KUBECONFIG
-              value: "{{"/etc/kube/{{.ITSkubeconfig}}"}}"
+              value: "/etc/kube/{{ .ITSSecretKey }}"
             volumeMounts:
             - name: kubeconfig
               mountPath: "/etc/kube"
@@ -137,7 +137,7 @@ spec:
             - name: HELM_CACHE_HOME
               value: "/tmp"
             - name: KUBECONFIG
-              value: "/etc/kube/{{ "{{.ITSkubeconfig}}" }}"
+              value:  "/etc/kube/{{ .ITSSecretKey }}"
             volumeMounts:
             - name: kubeconfig
               mountPath: "/etc/kube"
@@ -145,7 +145,7 @@ spec:
           volumes:
           - name: kubeconfig
             secret:
-              secretName: "{{ "{{.ITSSecretName}}" }}"
+              secretName:  {{.ITSSecretName}}
           restartPolicy: Never
       backoffLimit: 1
 {{- end }}

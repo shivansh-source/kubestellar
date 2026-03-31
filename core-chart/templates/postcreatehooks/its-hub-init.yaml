@@ -52,7 +52,7 @@ spec:
           volumes:
           - name: kubeconfig
             secret:
-              secretName: "{{"{{.ITSSecretName}}"}}"
+              secretName: "{{.ITSSecretName}}"
           restartPolicy: Never
       backoffLimit: 1
 {{- end }} 
