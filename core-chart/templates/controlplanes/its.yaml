@@ -13,8 +13,8 @@ spec:
   {{- end }}
     - hookName: install-status-addon
   globalVars:
-    ITSSecretName: {{ or (eq $cp.type "host") (eq $cp.type "external") | ternary "admin-kubeconfig" "vc-vcluster" }}
-    ITSkubeconfig: {{ or (eq $cp.type "host") (eq $cp.type "external") | ternary "kubeconfig-incluster" "config-incluster" }}
+    ITSSecretName: "admin-kubeconfig"
+    ITSkubeconfig: "kubeconfig-incluster"
   {{- if eq $cp.type "external" }}
   bootstrapSecretRef:
     name: {{ ($cp.bootstrapSecret).name | default (printf "%s-bootstrap" $cp.name) }}
