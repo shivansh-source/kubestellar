@@ -795,7 +795,7 @@ func handleAggregationReadLocked(scName string, scData *statusCollectorData) *v1
 	// 1. groupBy Evaluation Value -> unique ID
 	// 2. N-values tuple -> []*workStatusData
 	// 		Where the N-values tuple is the string concatenation of the assigned numbers
-	// 		seperated by commas, ordered by the groupBy expressions in scData.GroupBy slice.
+	// 		separated by commas, ordered by the groupBy expressions in scData.GroupBy slice.
 	generator := 0
 	ValueToNumber := map[any]int{}
 	idToAggregationGroup := map[string]*aggregationGroup{}

@@ -92,7 +92,7 @@ func getRestConfig(logger logr.Logger, cpName, labelValue string) (*rest.Config,
 			targetCP = &list.Items[0]
 			return true, nil
 		}
-		// TODO - we do not allow this case for a WDS as there is a 1:1 relashionship controller:cp for WDS.
+		// TODO - we do not allow this case for a WDS as there is a 1:1 relationship controller:cp for WDS.
 		// Need to revisit for ITS where we can have multiple shards.
 		// Assume we are not waiting for control planes to go away.
 		return true, fmt.Errorf(ErrMultipleControlPlanes, labelValue)
