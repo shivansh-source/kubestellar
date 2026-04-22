@@ -68,7 +68,7 @@ if ! dunsel=$(docker ps 2>&1); then
 fi
 echo "Container runtime is running."
 
-kubestellar_version=0.29.0-alpha.1
+kubestellar_version=0.29.0
 echo -e "KubeStellar Version: ${kubestellar_version}"
 
 echo -e "Checking that pre-req softwares are installed..."
@@ -146,21 +146,21 @@ echo -e "\033[33m✔\033[0m Context space clean up completed"
 
 echo -e "\nCreating two $k8s_platform clusters to serve as example WECs"
 clusters=(cluster1 cluster2)
-cluster_log_dir=$(mktemp -d)
-trap "rm -rf $cluster_log_dir" EXIT
+temp_dir=$(mktemp -d)
+trap "rm -rf $temp_dir" EXIT
 for cluster in "${clusters[@]}"; do
     if {
       if [ "$k8s_platform" == "kind" ]; then
-        kind create cluster --name "${cluster}" &>"${cluster_log_dir}/${cluster}.log"
+        kind create cluster --name "${cluster}" &>"${temp_dir}/${cluster}.log"
       else
-        k3d cluster create --network k3d-kubeflex "${cluster}" &>"${cluster_log_dir}/${cluster}.log"
+        k3d cluster create --network k3d-kubeflex "${cluster}" &>"${temp_dir}/${cluster}.log"
       fi
     }; then
         echo -e "\033[33m✔\033[0m Cluster $cluster was successfully created"
         kubectl config rename-context "${k8s_platform}-${cluster}" "${cluster}" >/dev/null 2>&1
     else
         echo -e "\033[0;31mX\033[0m Creation of cluster $cluster failed!" >&2
-        cat "${cluster_log_dir}/${cluster}.log" >&2
+        cat "${temp_dir}/${cluster}.log" >&2
         false
     fi
 done
@@ -184,12 +184,22 @@ images=("ghcr.io/loft-sh/vcluster:0.16.4"
         "quay.io/kubestellar/postgresql:16.0.0-debian-11-r13")
 
 for image in "${images[@]}"; do
-    docker pull "$image" &
+    if ! docker inspect $image &> /dev/null; then
+        docker pull $image &
+    fi
 done
 wait
 
+mkdir "${temp_dir}/context"
+
 for image in "${images[@]}"; do
     if [ "$k8s_platform" == "kind" ]; then
+        echo
+        echo "Flatten container image $image to single architecture to work around https://github.com/kubernetes-sigs/kind/issues/3795 ..."
+        echo "FROM $image" | docker build -t "$image" -f- "${temp_dir}/context"
+        if [[ "$(go env GOARCH)" != amd64 ]] && [[ "$image" =~ quay.io/open-cluster-management/ ]]; then
+            echo "That InvalidBaseImagePlatform warning is expected because the original image is buggy"
+        fi
         kind load docker-image "$image" --name kubeflex
     else
         k3d image import "$image" --cluster kubeflex
@@ -242,17 +252,31 @@ done
 
 echo -e "Checking that the CSR for cluster 1 and 2 appears..."
 
-echo""
+echo
 echo "Waiting for cluster1 and cluster2 to be ready and then approve their CSRs"
 checking_cluster cluster1
 checking_cluster cluster2
 
-echo""
+echo
 echo "Checking the new clusters are in the OCM inventory and label them"
 kubectl --context its1 get managedclusters
 kubectl --context its1 label managedcluster cluster1 location-group=edge name=cluster1
 kubectl --context its1 label managedcluster cluster2 location-group=edge name=cluster2
-echo""
+
+echo
+echo Waiting for transport controller to create namespace customization-properties
+# We allow versions of kubectl that do not support `kubectl wait --for=create`
+wait_counter=0
+while ! (kubectl --context its1 get ns customization-properties) ; do
+    if (($wait_counter > 20)); then
+        echo "Namespace customization-properties failed to appear!" >&2
+        exit 1
+    fi
+    ((wait_counter += 1))
+    sleep 10
+done
+
+echo
 echo -e "\033[33m✔\033[0m Congratulations! Your KubeStellar demo environment is now ready to use."
 
 cat <<EOF
