@@ -12,6 +12,9 @@ spec:
     metadata:
       name: kubestellar-leader-election-role
     rules:
+      - apiGroups: [""]
+        resources: ["configmaps"]
+        verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
       - apiGroups: ["coordination.k8s.io"]
         resources: ["leases"]
         verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
@@ -32,7 +35,7 @@ spec:
         verbs: ["get", "list", "watch"]
       - apiGroups: ["tenancy.kflex.kubestellar.org"]
         resources: ["controlplanes/status"]
-        verbs: ["get"]
+        verbs: ["get", "patch", "update"]
   - apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
@@ -108,6 +111,11 @@ spec:
       - kind: ServiceAccount
         name: default
         namespace: '{{"{{.Namespace}}"}}'
+  - apiVersion: v1
+    data: {}
+    kind: ConfigMap
+    metadata:
+      name: kubestellar-config
   - apiVersion: v1
     kind: Service
     metadata:
@@ -216,4 +224,5 @@ spec:
           securityContext:
             runAsNonRoot: true
           terminationGracePeriodSeconds: 10
+
 {{- end }}
