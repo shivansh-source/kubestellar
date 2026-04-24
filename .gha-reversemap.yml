@@ -34,30 +34,30 @@ actions/setup-python:
   tag: v6.2.0
   tag-url: https://github.com/actions/setup-python/tree/v6.2.0
 actions/setup-go:
-  sha: 7a3fe6cf4cb3a834922a1244abfce67bcef6a0c5
-  sha-url: https://github.com/actions/setup-go/commit/7a3fe6cf4cb3a834922a1244abfce67bcef6a0c5
-  tag: v6.2.0
-  tag-url: https://github.com/actions/setup-go/tree/v6.2.0
+  sha: 4b73464bb391d4059bd26b0524d20df3927bd417
+  sha-url: https://github.com/actions/setup-go/commit/4b73464bb391d4059bd26b0524d20df3927bd417
+  tag: v6.3.0
+  tag-url: https://github.com/actions/setup-go/tree/v6.3.0
 anchore/sbom-action/download-syft:
   sha: 0b82b0b1a22399a1c542d4d656f70cd903571b5c
   sha-url: https://github.com/anchore/sbom-action/commit/0b82b0b1a22399a1c542d4d656f70cd903571b5c
   tag: v0.21.1
   tag-url: https://github.com/anchore/sbom-action/tree/v0.21.1
 goreleaser/goreleaser-action:
-  sha: e435ccd777264be153ace6237001ef4d979d3a7a
-  sha-url: https://github.com/goreleaser/goreleaser-action/commit/e435ccd777264be153ace6237001ef4d979d3a7a
-  tag: v6.4.0
-  tag-url: https://github.com/goreleaser/goreleaser-action/tree/v6.4.0
+  sha: ec59f474b9834571250b370d4735c50f8e2d1e29
+  sha-url: https://github.com/goreleaser/goreleaser-action/commit/ec59f474b9834571250b370d4735c50f8e2d1e29
+  tag: v7.0.0
+  tag-url: https://github.com/goreleaser/goreleaser-action/tree/v7.0.0
 azure/setup-helm:
   sha: 1a275c3b69536ee54be43f2070a358922e12c8d4
   sha-url: https://github.com/azure/setup-helm/commit/1a275c3b69536ee54be43f2070a358922e12c8d4
   tag: v4.3.1
   tag-url: https://github.com/azure/setup-helm/tree/v4.3.1
 docker/login-action:
-  sha: c94ce9fb468520275223c153574b00df6fe4bcc9
-  sha-url: https://github.com/docker/login-action/commit/c94ce9fb468520275223c153574b00df6fe4bcc9
-  tag: v3.7.0
-  tag-url: https://github.com/docker/login-action/tree/v3.7.0
+  sha: b45d80f862d83dbcd57f89517bcf500b2ab88fb2
+  sha-url: https://github.com/docker/login-action/commit/b45d80f862d83dbcd57f89517bcf500b2ab88fb2
+  tag: v4.0.0
+  tag-url: https://github.com/docker/login-action/tree/v4.0.0
 actions/first-interaction:
   sha: 1c4688942c71f71d4f5502a26ea67c331730fa4d
   sha-url: https://github.com/actions/first-interaction/commit/1c4688942c71f71d4f5502a26ea67c331730fa4d
@@ -109,10 +109,10 @@ ossf/scorecard-action:
   tag: v2.4.3
   tag-url: https://github.com/ossf/scorecard-action/tree/v2.4.3
 aquasecurity/trivy-action:
-  sha: b6643a29fecd7f34b3597bc6acb0a98b03d33ff8
-  sha-url: https://github.com/aquasecurity/trivy-action/commit/b6643a29fecd7f34b3597bc6acb0a98b03d33ff8
-  tag: 0.33.1
-  tag-url: https://github.com/aquasecurity/trivy-action/tree/0.33.1
+  sha: 57a97c7e7821a5776cebc9bb87c984fa69cba8f1
+  sha-url: https://github.com/aquasecurity/trivy-action/commit/57a97c7e7821a5776cebc9bb87c984fa69cba8f1
+  tag: v0.35.0
+  tag-url: https://github.com/aquasecurity/trivy-action/tree/v0.35.0
 github/codeql-action/upload-sarif:
   sha: 45c373516f557556c15d420e3f5e0aa3d64366bc
   sha-url: https://github.com/github/codeql-action/commit/45c373516f557556c15d420e3f5e0aa3d64366bc
