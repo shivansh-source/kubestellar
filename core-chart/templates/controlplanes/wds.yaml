@@ -7,12 +7,16 @@ metadata:
 spec:
   backend: shared
   type: {{ .type | default "k8s" }}
+  waitForPostCreateHooks: true
   postCreateHooks:
     - hookName: kubestellar-controller
       vars:
-        APIGroups: "{{ .APIGroups | default "" }}"
+        APIGroups: '{{ .APIGroups }}'
     - hookName: transport-controller
+      vars:
+        WDSSecretName: admin-kubeconfig
+        WDSSecretKey: kubeconfig-incluster
   globalVars:
     ControlPlaneName: {{ .name }}
-    ITSName: "{{ .ITSName | default "" }}"
+    ITSName: '{{ .ITSName }}'
 {{- end }}
