@@ -313,7 +313,7 @@ verify-go-versions:
 
 $(TOOLS_DIR)/verify_boilerplate.py:
 	mkdir -p $(TOOLS_DIR)
-	curl --fail --retry 3 -L -o $(TOOLS_DIR)/verify_boilerplate.py https://raw.githubusercontent.com/kubernetes/repo-infra/master/hack/verify_boilerplate.py
+	curl --fail --retry 3 -L -o $(TOOLS_DIR)/verify_boilerplate.py https://raw.githubusercontent.com/kubernetes/repo-infra/2b27a29022132102d6030cfff62d0aeeaaf96f68/hack/verify_boilerplate.py
 	chmod +x $(TOOLS_DIR)/verify_boilerplate.py
 
 .PHONY: verify-boilerplate
